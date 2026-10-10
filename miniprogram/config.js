@@ -9,13 +9,13 @@ module.exports = {
   CLOUD_ENV_ID: '',
   FREE_QUOTA: 3,
   PAID_LABEL: '演示环境：模拟解锁，不产生真实扣费',
-  APP_NAME: '小练 Daily',
-  SLOGAN: '每天动一动，AI 教练在身边',
+  APP_NAME: 'AI Healthier Every Day',
+  SLOGAN: '每天一点自我照护，AI 陪你坚持',
   // AI 文案润色（微信 AI 生态·云开发大模型）：默认关闭，全部使用模板文案。
   // 开启步骤见 README《启用 AI 文案润色》：需配置云环境 + 部署 llmcoach 云函数。
   // 红线不变：AI 仅润色表达，动作分/计划等数值永远来自确定性模块，模板永远兜底。
   ENABLE_AI_TEXT: false,
-  // ---- 云端模型服务（天猫黑客松 AI 服务版）----
+  // ---- 云端模型服务（AI Healthier Every Day 自我照护版）----
   // backend 模型服务的基地址，如 http://127.0.0.1:8000 ；留空 = 未连接（全部 UI 自动降级）。
   // MODEL_SERVICE_API_KEY：backend 配置 MODEL_SERVICE_API_KEYS 后在此填对应 key。
   MODEL_SERVICE_BASE_URL: '',

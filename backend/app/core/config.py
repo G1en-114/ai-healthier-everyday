@@ -32,15 +32,15 @@ class Settings(BaseModel):
     OPENROUTER_API_KEY: str | None = None
     ELEVENLABS_API_KEY: str | None = None
 
-    # ---- 模型服务（天猫黑客松「小练 Daily」AI 服务版） ----
-    # LLM 教练大脑：OpenAI 兼容端点（Qwen/DeepSeek/GLM/Ollama 均可）。
+    # ---- 模型服务（Tencent Cloud SG Hackathon「AI Healthier Every Day」） ----
+    # LLM 自我照护 Agent：OpenAI 兼容端点（推荐腾讯云混元；Qwen/DeepSeek/GLM/Ollama 均可）。
     LLM_API_BASE: str | None = None
     LLM_API_KEY: str | None = None
-    LLM_MODEL: str = "qwen-plus"
-    # 多模态视觉顾问：OpenAI 兼容多模态端点（Qwen-VL/GLM-4V 等）。
+    LLM_MODEL: str = "hunyuan-turbos-latest"
+    # 多模态视觉顾问：OpenAI 兼容多模态端点（混元多模态/Qwen-VL/GLM-4V 等）。
     VLM_API_BASE: str | None = None
     VLM_API_KEY: str | None = None
-    VLM_MODEL: str = "qwen-vl-plus"
+    VLM_MODEL: str = "hunyuan-vision"
     # 自研 ST-GCN 动作识别 checkpoint（相对仓库根）。
     # 加载 ST-GCN 需要健康的 torch+numpy 环境（个别环境下底层库会原生崩溃），
     # 因此默认关闭、显式开启：置 ENABLE_STGCN=1 且确保 checkpoint 可加载。
@@ -73,10 +73,10 @@ def _from_environment() -> Settings:
         ELEVENLABS_API_KEY=_clean(os.getenv("ELEVENLABS_API_KEY")),
         LLM_API_BASE=_clean(os.getenv("LLM_API_BASE")),
         LLM_API_KEY=_clean(os.getenv("LLM_API_KEY")),
-        LLM_MODEL=_clean_with_default(os.getenv("LLM_MODEL"), "qwen-plus"),
+        LLM_MODEL=_clean_with_default(os.getenv("LLM_MODEL"), "hunyuan-turbos-latest"),
         VLM_API_BASE=_clean(os.getenv("VLM_API_BASE")),
         VLM_API_KEY=_clean(os.getenv("VLM_API_KEY")),
-        VLM_MODEL=_clean_with_default(os.getenv("VLM_MODEL"), "qwen-vl-plus"),
+        VLM_MODEL=_clean_with_default(os.getenv("VLM_MODEL"), "hunyuan-vision"),
         STGCN_CHECKPOINT=_clean_with_default(
             os.getenv("STGCN_CHECKPOINT"), "model/bestbest/best_model_2.pth"
         ),

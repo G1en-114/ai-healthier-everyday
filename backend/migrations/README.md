@@ -1,6 +1,6 @@
 # 数据库迁移（Alembic）
 
-本目录管理"练了吗"后端的数据库 Schema 迁移（需求 7.4）。
+本目录管理后端的数据库 Schema 迁移（需求 7.4）。
 
 - 开发环境默认 SQLite（`sqlite:///./dev.db`）。
 - 生产环境通过 `DATABASE_URL` 切换到 PostgreSQL，并以 Alembic 管理 Schema 演进。

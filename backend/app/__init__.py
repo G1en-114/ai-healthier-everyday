@@ -1,1 +1,1 @@
-"""练了吗 后端应用包 (FastAPI)。"""
+"""AI Healthier Every Day backend package (FastAPI)."""

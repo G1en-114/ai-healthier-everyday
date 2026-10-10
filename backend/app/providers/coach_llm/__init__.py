@@ -5,6 +5,7 @@ from __future__ import annotations
 from .base import CoachContext, CoachLLM, CoachReply
 from .openai_compat import OpenAICompatCoach
 from .template import TemplateCoach
+from .agent import AgentReply, CoachAgent
 
 
 class CoachChain:
@@ -24,16 +25,25 @@ class CoachChain:
     def available(self) -> bool:
         return True  # 链整体永远可用（模板兜底）
 
-    def chat(self, messages: list[dict], context: CoachContext) -> CoachReply:
+    def chat(self, messages: list[dict], context: CoachContext, lang: str = "zh") -> CoachReply:
         self.last_fallback_reason = None
         if self._llm.available():
             try:
-                return self._llm.chat(messages, context)
+                return self._llm.chat(messages, context, lang)
             except Exception as exc:  # noqa: BLE001 - 大模型故障一律降级
                 self.last_fallback_reason = f"{type(exc).__name__}: {exc}"
         else:
             self.last_fallback_reason = "llm not configured"
-        return self._fallback.chat(messages, context)
+        return self._fallback.chat(messages, context, lang)
 
 
-__all__ = ["CoachContext", "CoachLLM", "CoachReply", "OpenAICompatCoach", "TemplateCoach", "CoachChain"]
+__all__ = [
+    "CoachContext",
+    "CoachLLM",
+    "CoachReply",
+    "OpenAICompatCoach",
+    "TemplateCoach",
+    "CoachChain",
+    "CoachAgent",
+    "AgentReply",
+]

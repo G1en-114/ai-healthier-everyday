@@ -15,7 +15,7 @@ from pathlib import Path
 
 from app.core.config import get_settings
 
-KINDS = ("vision", "coach", "plan")
+KINDS = ("vision", "coach", "agent", "plan")
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS usage_events (

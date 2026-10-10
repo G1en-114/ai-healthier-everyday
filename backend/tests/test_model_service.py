@@ -58,9 +58,10 @@ def test_status_reports_capability_matrix(isolated_env) -> None:
     resp = client.get("/api/status")
     assert resp.status_code == 200
     body = resp.json()
-    assert set(body) == {"stgcn", "vlm", "llm", "auth"}
+    assert set(body) == {"stgcn", "vlm", "llm", "agent", "auth"}
     assert body["auth"] == "disabled-dev"  # 测试未配置密钥
     assert body["stgcn"] is False  # 测试环境保持关闭（显式开关）
+    assert body["agent"] is False  # LLM 未配置时 Agent 不可用（模板兜底）
 
 
 def test_tiers_endpoint_removed_no_pricing_surface(isolated_env) -> None:

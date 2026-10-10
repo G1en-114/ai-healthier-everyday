@@ -26,7 +26,7 @@
   </view>
 
   <view class="card">
-    <view class="card-title">关于练了吗</view>
+    <view class="card-title">关于 AI Healthier Every Day</view>
     <view class="muted about-line">AI 健身教练小程序 · 大赛参赛版 v1.0</view>
     <view class="muted about-line">动作分、训练计划均由确定性算法生成；动作判定基于端侧姿态识别。内容不构成医疗建议，训练时请量力而行。</view>
   </view>

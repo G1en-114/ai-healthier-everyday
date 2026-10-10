@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Healthier Every Day — Self-Care Companion</title>
+  <meta name="description" content="Intelligent support for long-term self-care: in-browser pose AI, deterministic safety guardrails, and a tool-calling self-care agent." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230F766E' d='M12 21s-7.5-4.9-10-9.2C.4 8.6 2 5 5.5 5c2 0 3.4 1 4.5 2.6C11.1 6 12.5 5 14.5 5 18 5 19.6 8.6 22 11.8 19.5 16.1 12 21 12 21z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M12 21s-7.5-4.9-10-9.2C.4 8.6 2 5 5.5 5c2 0 3.4 1 4.5 2.6C11.1 6 12.5 5 14.5 5 18 5 19.6 8.6 22 11.8 19.5 16.1 12 21 12 21z"/>
+        <path d="M4 12h4l2-4 3 7 2-3h5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1>AI Healthier Every Day</h1>
+        <p class="tagline" data-i18n="tagline">Small daily self-care, guided by AI</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span id="ai-status" class="ai-status"><span class="dot"></span><span id="ai-status-text">checking…</span></span>
+      <button id="lang-toggle" class="ghost-btn" type="button">中文</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="today" type="button" data-i18n="nav_today">Today</button>
+    <button class="tab" data-tab="train" type="button" data-i18n="nav_train">Train</button>
+    <button class="tab" data-tab="coach" type="button" data-i18n="nav_coach">AI Coach</button>
+    <button class="tab" data-tab="progress" type="button" data-i18n="nav_progress">Progress</button>
+  </nav>
+
+  <main>
+    <!-- ============ TODAY ============ -->
+    <section id="tab-today" class="tab-panel active">
+      <div class="hero-grid">
+        <div class="card greeting-card">
+          <p class="greeting" id="greeting">Hello</p>
+          <p class="date-line" id="date-line"></p>
+          <button id="checkin-btn" class="primary-btn" type="button" data-i18n="checkin_today">Check in today</button>
+          <p class="muted small" id="checkin-note"></p>
+        </div>
+        <div class="card streak-card">
+          <svg class="streak-ring" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="52"/>
+            <circle class="ring-fg" id="streak-ring" cx="60" cy="60" r="52"/>
+            <text id="streak-num" x="60" y="66" text-anchor="middle">0</text>
+          </svg>
+          <p class="streak-label" data-i18n="streak_days">day streak</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="today_plan">Today's gentle plan</h2>
+          <span class="muted small" id="plan-total"></span>
+        </div>
+        <div id="today-items" class="item-list"><p class="muted">…</p></div>
+        <p class="muted small plan-note" data-i18n="plan_note">A deterministic weekly plan — no AI invented it, and every session can be swapped in Train.</p>
+      </div>
+
+      <div class="card tip-card">
+        <h2 data-i18n="daily_tip">Self-care tip of the day</h2>
+        <p id="daily-tip" class="tip-text"></p>
+      </div>
+    </section>
+
+    <!-- ============ TRAIN ============ -->
+    <section id="tab-train" class="tab-panel">
+      <div id="train-catalog">
+        <div class="card">
+          <div class="card-head">
+            <h2 data-i18n="choose_exercise">Choose a self-care exercise</h2>
+          </div>
+          <div id="category-chips" class="chips"></div>
+          <div id="exercise-grid" class="ex-grid"></div>
+        </div>
+      </div>
+
+      <div id="train-session" class="hidden">
+        <div class="card">
+          <div class="card-head">
+            <h2 id="session-title">Exercise</h2>
+            <button id="session-back" class="ghost-btn" type="button" data-i18n="back">Back</button>
+          </div>
+          <div id="session-brief"></div>
+          <div class="safety-box" id="session-safety"></div>
+
+          <div id="pose-stage" class="stage hidden">
+            <div class="stage-wrap">
+              <video id="cam" autoplay playsinline muted></video>
+              <canvas id="skeleton"></canvas>
+              <div class="hud">
+                <div class="hud-reps"><span id="rep-count">0</span><small data-i18n="reps">reps</small></div>
+                <div class="hud-cue" id="pose-cue">…</div>
+              </div>
+            </div>
+            <p class="muted small privacy-note" data-i18n="privacy_pose">Pose AI runs entirely in your browser — the video never leaves this device.</p>
+            <div class="row-btns">
+              <button id="pose-finish" class="primary-btn" type="button" data-i18n="finish_session">Finish</button>
+            </div>
+          </div>
+
+          <div id="timer-stage" class="hidden">
+            <div class="timer-ring-wrap">
+              <svg class="timer-ring" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                <circle class="ring-fg amber" id="timer-arc" cx="60" cy="60" r="52"/>
+                <text id="timer-text" x="60" y="66" text-anchor="middle">0:00</text>
+              </svg>
+              <p id="timer-cue" class="timer-cue"></p>
+            </div>
+            <div class="row-btns">
+              <button id="timer-finish" class="primary-btn" type="button" data-i18n="finish_session">Finish</button>
+            </div>
+          </div>
+
+          <div id="session-summary" class="hidden"></div>
+
+          <div class="row-btns" id="start-row">
+            <button id="start-camera" class="primary-btn hidden" type="button" data-i18n="start_camera">Start with camera AI counting</button>
+            <button id="start-timer" class="secondary-btn" type="button" data-i18n="start_timer">Start guided timer</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COACH ============ -->
+    <section id="tab-coach" class="tab-panel">
+      <div class="card chat-card">
+        <div class="card-head">
+          <h2 data-i18n="coach_title">Your self-care agent</h2>
+          <span class="muted small" data-i18n="coach_sub">Plans, adapts, and checks on safety — never diagnoses.</span>
+        </div>
+        <div id="chat-log" class="chat-log"></div>
+        <div id="quick-chips" class="chips"></div>
+        <form id="chat-form" class="chat-input-row">
+          <input id="chat-input" type="text" maxlength="500" autocomplete="off" data-i18n-placeholder="ask_placeholder" placeholder="Ask about your routine, energy, or an exercise…" />
+          <button class="primary-btn" type="submit" data-i18n="send">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ PROGRESS ============ -->
+    <section id="tab-progress" class="tab-panel">
+      <div class="stat-grid">
+        <div class="card stat"><span class="stat-num" id="stat-streak">0</span><span class="stat-label" data-i18n="streak_days">day streak</span></div>
+        <div class="card stat"><span class="stat-num" id="stat-best">0</span><span class="stat-label" data-i18n="best_streak">best streak</span></div>
+        <div class="card stat"><span class="stat-num" id="stat-sessions">0</span><span class="stat-label" data-i18n="total_sessions">sessions</span></div>
+        <div class="card stat"><span class="stat-num" id="stat-minutes">0</span><span class="stat-label" data-i18n="total_minutes">minutes</span></div>
+      </div>
+      <div class="card">
+        <h2 data-i18n="last14">Last 14 days</h2>
+        <canvas id="chart" height="160"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="history">History</h2>
+          <button id="export-btn" class="ghost-btn" type="button" data-i18n="export_data">Export my data</button>
+        </div>
+        <div id="history-list" class="item-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="disclaimer">AI Healthier Every Day supports healthy habits — it is not a medical device and does not diagnose. Stop if you feel pain, dizziness or breathlessness, and consult a healthcare professional. In an emergency, call your local emergency number.</p>
+    <p class="muted small">Tencent Cloud AI CAN DO IT Hackathon Singapore 2026 · Healthcare Track · NTU LKCMedicine Challenge · Your data stays in this browser.</p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/poseRules.js"></script>
+  <script src="js/pose.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -70,4 +70,4 @@ Cloned from our own `Health-525/lian_le_ma` (WeChat mini-program competition ent
 
 ## License
 
-MIT (base repo license carried over)
+Apache License 2.0 — see [LICENSE](LICENSE). (The base repo `Health-525/lian_le_ma` was MIT; this derivative is relicensed Apache-2.0 by the original author for this competition repo.)
